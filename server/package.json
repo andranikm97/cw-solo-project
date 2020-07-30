@@ -1,0 +1,25 @@
+{
+  "name": "solo-project-server",
+  "version": "1.0.0",
+  "description": "A server that supports a mobile application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andranikm97/cw-solo-project.git"
+  },
+  "author": "Andranik Markaryan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andranikm97/cw-solo-project/issues"
+  },
+  "homepage": "https://github.com/andranikm97/cw-solo-project#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "mongoose": "^5.9.26",
+    "morgan": "^1.10.0"
+  }
+}
