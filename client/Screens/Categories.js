@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-const CategoryDetail = ({ navigation, route }) => {
+const Categories = ({ navigation, route }) => {
   const categoryName = route.params.categoryName;
   return (
     <View>
@@ -10,4 +10,4 @@ const CategoryDetail = ({ navigation, route }) => {
   );
 };
 
-export default CategoryDetail;
+export default Categories;

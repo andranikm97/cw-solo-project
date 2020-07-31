@@ -7,9 +7,11 @@ import {
   Platform,
   FlatList,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
 import ApiClient from '../Services/ApiService';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import CategoryComponent from '../Components/CategoryComponents';
+import FoodComponent from '../Components/FoodComponent';
 
 const LogModal = ({ navigation, route }) => {
   const [query, setQuery] = useState('');
@@ -27,38 +29,36 @@ const LogModal = ({ navigation, route }) => {
     <SafeAreaView style={[styles.androidSafeArea, styles.container]}>
       <View style={styles.searchBar}>
         <TextInput
+          style={{ color: 'black' }}
           value={query}
           onChangeText={setQuery}
-          placeholder={'What did you eat?'}
+          placeholder={'Search globally here or tap a category'}
         />
       </View>
 
       <FlatList
         ListEmptyComponent={null}
         style={styles.resultsContainer}
-        data={avaliableIngredients.hints}
-        keyExtractor={(data) => {
-          return data.food.foodId;
-        }}
+        data={avaliableIngredients.hits}
+        keyExtractor={(data) => data._id}
         renderItem={({ item }) => {
-          const { food } = item;
+          // console.log(item);
+          // const { food } = item;
           return (
-            <Text>
-              {food.label}: {food.nutrients.ENERC_KCAL}
-            </Text>
+            // <FoodComponent label={food.label} nutrients={food.nutrients} />
+            <Text>Working</Text>
           );
         }}
       />
 
-      <View style={styles.searchButton}>
-        <TouchableOpacity
-          onPress={() => {
-            searchProduct();
-          }}
-        >
-          <Text> {isSearching ? 'Searching ...' : 'Search'} </Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.searchButton}
+        onPress={() => {
+          searchProduct();
+        }}
+      >
+        <Text> {isSearching ? 'Searching ...' : 'Search'} </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -86,6 +86,8 @@ const styles = StyleSheet.create({
   searchBar: {
     height: 30,
     backgroundColor: '#B5D6CE',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   resultsContainer: {
     height: 'auto',
