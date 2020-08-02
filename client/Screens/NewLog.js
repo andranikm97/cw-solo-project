@@ -8,15 +8,35 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import ApiClient from '../Services/ApiService';
-import CategoryComponent from '../Components/CategoryComponents';
-import FoodComponent from '../Components/FoodComponent';
+import Category from '../Components/Category';
+import CategoryDetail from '../Screens/CategoryDetail';
+import db from '../db';
+import { createStackNavigator } from '@react-navigation/stack';
+import ChosenProduct from '../Components/ChosenProduct';
 
-const LogModal = ({ navigation, route }) => {
+const NewLog = ({ navigation, route }) => {
   const [query, setQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [avaliableIngredients, setAvaliableIngredients] = useState({});
+  const [avaliableIngredients, setAvaliableIngredients] = useState([]);
+  const [chosenProducts, setChosenProducts] = useState([]);
+
+  const addProduct = (product) => {
+    console.log('addProduct:', product);
+    setChosenProducts((current) => [...current, product]);
+  };
+
+  const removeProduct = (product) => {
+    console.log('removeProduct:', product);
+    setChosenProducts((current) => {
+      const newItems = current.filter((item) => {
+        return item.id !== product.id;
+      });
+      return newItems;
+    });
+  };
 
   const searchProduct = useCallback(async () => {
     setIsSearching(true);
@@ -24,6 +44,18 @@ const LogModal = ({ navigation, route }) => {
     setAvaliableIngredients(response);
     setIsSearching(false);
   }, [query]);
+
+  const dive = (items) => {
+    navigation.navigate('CategoryDetail', {
+      items: items,
+      addProduct: addProduct,
+      removeProduct: removeProduct,
+    });
+  };
+
+  useEffect(() => {
+    console.log('Current products:', chosenProducts);
+  }, [chosenProducts]);
 
   return (
     <SafeAreaView style={[styles.androidSafeArea, styles.container]}>
@@ -36,41 +68,62 @@ const LogModal = ({ navigation, route }) => {
         />
       </View>
 
-      <FlatList
-        ListEmptyComponent={null}
-        style={styles.resultsContainer}
-        data={avaliableIngredients.hits}
-        keyExtractor={(data) => data._id}
-        renderItem={({ item }) => {
-          // console.log(item);
-          // const { food } = item;
-          return (
-            // <FoodComponent label={food.label} nutrients={food.nutrients} />
-            <Text>Working</Text>
-          );
-        }}
-      />
+      <ScrollView>
+        <Categories dive={dive} />
+      </ScrollView>
 
-      <TouchableOpacity
-        style={styles.searchButton}
-        onPress={() => {
-          searchProduct();
-        }}
-      >
-        <Text> {isSearching ? 'Searching ...' : 'Search'} </Text>
-      </TouchableOpacity>
+      {query ? (
+        <TouchableOpacity
+          style={styles.searchButton}
+          onPress={() => {
+            searchProduct();
+          }}
+        >
+          <Text> {isSearching ? 'Searching ...' : 'Search'} </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('MyItems', {
+              products: chosenProducts,
+            });
+          }}
+        >
+          <View style={products.container}>
+            <Text> See My Items</Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };
 
-// const MainSuggestion = (ingerdient) => {
-//   return (
-//     <View>
-//       <Text>Search Primary Suggestion</Text>
-//       <Text>{ingerdient.label}</Text>
-//     </View>
-//   );
-// };
+const Categories = ({ dive }) => {
+  return (
+    <View style={styles.categoryContainer}>
+      <FlatList
+        columnWrapperStyle={{ flexWrap: 'wrap' }}
+        numColumns={2}
+        data={db.categories}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => {
+          return <Category dive={dive} category={item} />;
+        }}
+      />
+    </View>
+  );
+};
+
+const products = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '80%',
+    backgroundColor: 'teal',
+  },
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -105,6 +158,19 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'white',
   },
+  categoryContainer: {
+    flex: 1,
+    marginTop: 10,
+  },
+  box: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'green',
+  },
+  wrapper: {
+    marginVertical: 10,
+    alignItems: 'center',
+  },
 });
 
-export default LogModal;
+export default NewLog;

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,6 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
-import ApiService from '../Services/ApiService';
-import { TextInput } from 'react-native-gesture-handler';
 
 const Home = ({ navigation }) => {
   return (
@@ -33,9 +31,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 10,
   },
-  androidSafeArea: {
-    paddingTop: Platform.OS === 'android' ? 30 : 0,
-  },
+  // androidSafeArea: {
+  //   paddingTop: Platform.OS === 'android' ? 30 : 0,
+  // },
   myLogs: {
     flex: 6,
     alignItems: 'center',
