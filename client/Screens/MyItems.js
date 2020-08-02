@@ -6,37 +6,58 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import FoodDetail from '../Components/FoodDetail';
+import ProductDetail from '../Components/ProductDetail';
 
 const MyItems = ({ route }) => {
   const items = route.params.products;
-  console.log('My items was called!');
-  console.log('Items:', items);
   return (
-    <View>
+    <View style={styles.container}>
       <View style={flatList.container}>
         <FlatList
           data={items}
           keyExtractor={(data) => data.id}
           renderItem={({ item }) => {
             console.log(item);
-            return <FoodDetail>{item.name}</FoodDetail>;
+            return <ProductDetail item={item} />;
           }}
+          overScrollMode={'always'}
         />
       </View>
-      <TouchableOpacity>
-        <Text>Submit log</Text>
+      <TouchableOpacity style={button.container}>
+        <View>
+          <Text>Submit log</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
 };
 
-const flatList = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    width: '95%',
-    paddingHorizontal: 5,
+    backgroundColor: 'powderblue',
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+  },
+});
+
+const flatList = StyleSheet.create({
+  container: {
+    flex: 4,
+    width: '100%',
+    backgroundColor: 'teal',
+  },
+});
+
+const button = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 300,
+    height: 100,
+    backgroundColor: '#ffd36b',
   },
 });
 

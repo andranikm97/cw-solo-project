@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import ApiClient from '../Services/ApiService';
 import Category from '../Components/Category';
@@ -24,12 +25,10 @@ const NewLog = ({ navigation, route }) => {
   const [chosenProducts, setChosenProducts] = useState([]);
 
   const addProduct = (product) => {
-    console.log('addProduct:', product);
     setChosenProducts((current) => [...current, product]);
   };
 
   const removeProduct = (product) => {
-    console.log('removeProduct:', product);
     setChosenProducts((current) => {
       const newItems = current.filter((item) => {
         return item.id !== product.id;
@@ -79,7 +78,7 @@ const NewLog = ({ navigation, route }) => {
             searchProduct();
           }}
         >
-          <Text> {isSearching ? 'Searching ...' : 'Search'} </Text>
+          <Text> {isSearching ? <ActivityIndicator /> : 'Search'} </Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity

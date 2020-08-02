@@ -17,19 +17,13 @@ const Product = ({ item, addProduct, removeProduct }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [isLoading, setLoading] = useState(true);
 
-  const fetchProduct = useCallback(async () => {
-    const response = await ApiClient.getProduct(item.name);
-    await setProduct({
-      name: response.text,
-      info: response.info,
-      id: await uuidv4(),
+  useEffect(() => {
+    setProduct({
+      name: item.name,
+      id: uuidv4(),
       image: item.image,
     });
     setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    fetchProduct();
   }, []);
 
   const handlePress = () => {
@@ -52,9 +46,9 @@ const Product = ({ item, addProduct, removeProduct }) => {
             <View style={styles.box}>
               <Image
                 style={isSelected ? styles.boxImageSelected : styles.boxImage}
-                source={item.image}
+                source={product.image}
               />
-              <Text>{product.name}</Text>
+              {/* <Text>{product.name}</Text> */}
             </View>
           </View>
         </TouchableOpacity>
