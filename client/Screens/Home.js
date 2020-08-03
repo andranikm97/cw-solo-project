@@ -18,7 +18,6 @@ const Home = ({ navigation }) => {
     const response = await ApiClient.getLogs();
     const data = await response.json();
     setLogs(data);
-    console.log(data);
   }, []);
 
   useEffect(() => {

@@ -3,17 +3,17 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Image,
   FlatList,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import ApiClient from '../Services/ApiService';
 
 const LogDetail = ({ route }) => {
   const log = route.params.log;
   const [totals, setTotals] = useState({});
   const [isLoading, setLoading] = useState(true);
-
+  const [itemsShown, setItemsShown] = useState(false);
   const calculateTotals = useCallback(async () => {
     const mockTotals = {
       calories: 0,
@@ -23,14 +23,11 @@ const LogDetail = ({ route }) => {
     };
 
     log.products.forEach((product) => {
-      mockTotals.calories += product.calories;
-      mockTotals.protein += product.protein;
-      mockTotals.fiber += product.fiber;
-      mockTotals.fat += product.fat;
+      mockTotals.calories += Math.ceil(product.calories);
+      mockTotals.protein += Math.ceil(product.protein);
+      mockTotals.fiber += Math.ceil(product.fiber);
+      mockTotals.fat += Math.ceil(product.fat);
     });
-
-    console.log('Log:', log);
-    console.log('Totals:', mockTotals);
 
     await setTotals(mockTotals);
     setLoading(false);
@@ -41,7 +38,7 @@ const LogDetail = ({ route }) => {
   }, []);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       {isLoading ? (
         <View style={loadScreen.container}>
           <ActivityIndicator size="large" color="#00ff00" />
@@ -73,7 +70,43 @@ const LogDetail = ({ route }) => {
           </View>
 
           <View style={items.container}>
-            <FlatList numColumns={3} columnWrapperStyle={items.flatList} />
+            {itemsShown ? (
+              <View style={items.shown}>
+                <FlatList
+                  numColumns={3}
+                  columnWrapperStyle={items.flatList}
+                  data={log.products}
+                  keyExtractor={(data) => data.id}
+                  renderItem={({ item }) => {
+                    return (
+                      <View style={items.box}>
+                        <Image source={item.image} style={items.image} />
+                        <Text> {item.name}</Text>
+                      </View>
+                    );
+                  }}
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    setItemsShown((current) => !current);
+                  }}
+                >
+                  <View style={items.hidden}>
+                    <Text>Hide items</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  setItemsShown((current) => !current);
+                }}
+              >
+                <View style={items.hidden}>
+                  <Text>Show items</Text>
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       )}
@@ -97,14 +130,24 @@ const main = StyleSheet.create({
 });
 const info = StyleSheet.create({
   container: {
-    height: 200,
+    flex: 6,
+    padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    backgroundColor: 'powderblue',
   },
 });
-const chart = StyleSheet.create({});
+const chart = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'teal',
+  },
+});
 const details = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 5,
   },
   row: {
@@ -114,18 +157,41 @@ const details = StyleSheet.create({
   section: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 const items = StyleSheet.create({
   container: {
-    height: 500,
+    flex: 7,
+    alignItems: 'center',
+  },
+  shown: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  hidden: {
+    marginTop: 15,
+    marginBottom: 5,
+    height: 30,
+    width: 150,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fbd46d',
+  },
+  hiddenText: {
+    color: 'white',
+    fontSize: 22,
   },
   flatList: {
     flexWrap: 'wrap',
   },
+  box: {
+    margin: 10,
+  },
   image: {
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
   },
 });
 
