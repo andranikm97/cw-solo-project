@@ -12,7 +12,7 @@ import ApiClient from '../Services/ApiService';
 import { v4 as uuidv4 } from 'uuid';
 uuidv4();
 
-const Product = ({ item, addProduct, removeProduct }) => {
+const Product = ({ item, functions }) => {
   const [product, setProduct] = useState({});
   const [isSelected, setIsSelected] = useState(false);
   const [isLoading, setLoading] = useState(true);
@@ -20,9 +20,13 @@ const Product = ({ item, addProduct, removeProduct }) => {
   useEffect(() => {
     setProduct({
       name: item.name,
-      id: uuidv4(),
+      id: item.id,
       image: item.image,
       quantity: 1,
+    });
+    setIsSelected(() => {
+      let res = functions.checkIfSelected(item.id);
+      return res;
     });
     setLoading(false);
   }, []);
@@ -30,10 +34,10 @@ const Product = ({ item, addProduct, removeProduct }) => {
   const handlePress = () => {
     if (isSelected) {
       setIsSelected(false);
-      removeProduct(product);
+      functions.removeProduct(product);
     } else {
       setIsSelected(true);
-      addProduct(product);
+      functions.addProduct(product);
     }
   };
 
@@ -49,7 +53,6 @@ const Product = ({ item, addProduct, removeProduct }) => {
                 style={isSelected ? styles.boxImageSelected : styles.boxImage}
                 source={product.image}
               />
-              {/* <Text>{product.name}</Text> */}
             </View>
           </View>
         </TouchableOpacity>

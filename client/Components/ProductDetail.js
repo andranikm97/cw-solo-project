@@ -12,22 +12,28 @@ import ApiClient from '../Services/ApiService';
 const ProductDetail = ({ item, modifyProduct }) => {
   item.name = item.name.slice(0, 1).toUpperCase() + item.name.slice(1);
 
-  const [isLoading, setLoading] = useState(true);
   const [product, setProduct] = useState({ ...item });
-  const [chosenQuantity, setChosenQuantity] = useState(1);
+  const [chosenQuantity, setChosenQuantity] = useState(item.quantity);
+  const [isLoading, setLoading] = useState(true);
 
   const fetchProductInfo = useCallback(async () => {
     const response = await ApiClient.getProduct(item.name);
-    const nutrients = await response.info.nutrients;
+    const nutrients = response.info.nutrients;
     await setProduct((current) => {
-      return {
+      const updatedProduct = {
         ...current,
+        hasNutrients: true,
         calories: nutrients.ENERC_KCAL,
         protein: nutrients.PROCNT,
         fiber: nutrients.FIBTG,
         fat: nutrients.FAT,
       };
+
+      modifyProduct(updatedProduct, 'info');
+
+      return updatedProduct;
     });
+
     setLoading(false);
   }, []);
 
@@ -36,7 +42,11 @@ const ProductDetail = ({ item, modifyProduct }) => {
   };
 
   useEffect(() => {
-    fetchProductInfo();
+    if (!product.hasNutrients) {
+      fetchProductInfo();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   return (
@@ -118,8 +128,8 @@ const card = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+    borderTopLeftRadius: 7,
+    borderTopRightRadius: 7,
     backgroundColor: '#ebecf1',
   },
   headerText: {
@@ -159,7 +169,6 @@ const bottom = StyleSheet.create({
     justifyContent: 'center',
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
-    backgroundColor: 'blue',
   },
   currentQuantity: {
     flex: 1,
@@ -168,7 +177,7 @@ const bottom = StyleSheet.create({
     alignItems: 'center',
   },
   quantityText: {
-    color: 'white',
+    color: 'black',
   },
   button: {
     justifyContent: 'center',
@@ -176,7 +185,7 @@ const bottom = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 5,
-    backgroundColor: '#f5f1da',
+    backgroundColor: '#fbd46d',
   },
 });
 

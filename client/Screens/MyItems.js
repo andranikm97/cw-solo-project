@@ -11,7 +11,10 @@ import ProductDetail from '../Components/ProductDetail';
 
 const MyItems = ({ route }) => {
   const items = route.params.products;
-  const handleSubmit = () => {};
+  const functions = route.params.functions;
+  const handleSubmit = () => {
+    functions.submitLog();
+  };
 
   return (
     <View style={styles.container}>
@@ -23,19 +26,14 @@ const MyItems = ({ route }) => {
             return (
               <ProductDetail
                 item={item}
-                modifyProduct={route.params.modifyProduct}
+                modifyProduct={functions.modifyProduct}
               />
             );
           }}
           initialScrollIndex={0}
         />
       </SafeAreaView>
-      <TouchableOpacity
-        style={button.container}
-        onPress={() => {
-          handleSubmit;
-        }}
-      >
+      <TouchableOpacity style={button.container} onPress={handleSubmit}>
         <View>
           <Text>Submit log</Text>
         </View>
@@ -48,7 +46,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'powderblue',
+    backgroundColor: 'white',
     paddingHorizontal: 10,
     paddingBottom: 10,
   },
@@ -56,9 +54,8 @@ const styles = StyleSheet.create({
 
 const flatList = StyleSheet.create({
   container: {
-    height: 500,
+    height: 400,
     width: '100%',
-    backgroundColor: 'teal',
   },
 });
 
@@ -70,7 +67,7 @@ const button = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffd36b',
+    backgroundColor: '#eebb4d',
   },
 });
 

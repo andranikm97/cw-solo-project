@@ -26,15 +26,13 @@ ApiClient.getProduct = function (product) {
 };
 
 ApiClient.submitLog = function (items) {
-  console.log('Items before submission:', items);
-  return true;
-  // return fetch(DB_BASE_URL + '/logs', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(items),
-  // });
+  return fetch(DB_BASE_URL + '/logs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(items),
+  });
 };
 
 ApiClient.getLogs = function (items) {

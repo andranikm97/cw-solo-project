@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const DB_PORT = process.env.DB_PORT || 27017;
-const DB_NAME = process.env.DB_NAME || "logd-app";
+const DB_NAME = process.env.DB_NAME || "logs";
 
 mongoose.connect(
   `mongodb://localhost:${DB_PORT}/${DB_NAME}`,

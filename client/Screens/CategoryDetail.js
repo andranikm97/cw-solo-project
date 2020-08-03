@@ -4,9 +4,7 @@ import Product from '../Components/Product';
 
 const CategoryDetail = ({ route }) => {
   const items = route.params.items;
-  const addProduct = route.params.addProduct;
-  const removeProduct = route.params.removeProduct;
-
+  const functions = route.params.functions;
   return (
     <View style={styles.container}>
       <FlatList
@@ -15,13 +13,7 @@ const CategoryDetail = ({ route }) => {
         data={items}
         keyExtractor={(item) => `${item.id}`}
         renderItem={({ item }) => {
-          return (
-            <Product
-              addProduct={addProduct}
-              removeProduct={removeProduct}
-              item={item}
-            />
-          );
+          return <Product functions={functions} item={item} />;
         }}
       />
     </View>
@@ -31,9 +23,10 @@ const CategoryDetail = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 10,
+    paddingTop: 10,
     backgroundColor: 'white',
     alignItems: 'center',
+    overflow: 'scroll',
   },
   item: {
     height: 75,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,24 +6,46 @@ import {
   TouchableOpacity,
   Platform,
   SafeAreaView,
+  FlatList,
 } from 'react-native';
+import ApiClient from '../Services/ApiService';
+import Log from '../Components/Log';
 
 const Home = ({ navigation }) => {
-  // const [chosenProducts, setChosenProducts] = useState([]);
+  const [logs, setLogs] = useState([]);
+
+  const fetchLogs = useCallback(async () => {
+    const response = await ApiClient.getLogs();
+    const data = await response.json();
+    setLogs(data);
+    console.log(data);
+  }, []);
+
+  useEffect(() => {
+    fetchLogs();
+  }, []);
 
   return (
     <SafeAreaView style={[styles.androidSafeArea, styles.container]}>
-      <View style={styles.addNew}>
+      <View style={myLogs.container}>
+        <FlatList
+          data={logs}
+          keyExtractor={(data) => data._id}
+          renderItem={({ item }) => {
+            return <Log navigation={navigation} log={item} />;
+          }}
+        />
+      </View>
+      <View style={addNew.container}>
         <TouchableOpacity
-          style={styles.addNewButton}
+          style={addNew.button}
           onPress={() => {
             navigation.navigate('NewLog', {
               date: 'today',
-              chosenProducts: chosenProducts,
             });
           }}
         >
-          <Text style={styles.addNewText}> Create a new Entry + </Text>
+          <Text style={addNew.text}>+ Create Log </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -39,24 +61,32 @@ const styles = StyleSheet.create({
   androidSafeArea: {
     paddingTop: Platform.OS === 'android' ? 30 : 0,
   },
-  myLogs: {
-    flex: 6,
+});
+
+const myLogs = StyleSheet.create({
+  container: {
+    height: 400,
     alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
   },
-  addNew: {
+});
+
+const addNew = StyleSheet.create({
+  container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  addNewButton: {
-    backgroundColor: 'teal',
-    borderRadius: 10,
+  button: {
     height: 70,
     width: 250,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: '#eebb4d',
   },
-  addNewText: {
+  text: {
     color: 'white',
     fontFamily: 'sans-serif',
     fontSize: 25,

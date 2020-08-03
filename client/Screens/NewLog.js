@@ -21,8 +21,11 @@ import ChosenProduct from '../Components/ChosenProduct';
 const NewLog = ({ navigation, route }) => {
   const [query, setQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [avaliableIngredients, setAvaliableIngredients] = useState([]);
   const [chosenProducts, setChosenProducts] = useState([]);
+
+  const checkIfSelected = (itemId) => {
+    return !!chosenProducts.find((item) => item.id === itemId);
+  };
 
   const addProduct = (product) => {
     setChosenProducts((current) => [...current, product]);
@@ -37,36 +40,54 @@ const NewLog = ({ navigation, route }) => {
     });
   };
 
-  const modifyProduct = (product, operation) => {
-    if (operation === '+') {
-      setChosenProducts((current) => {
-        const targetProduct = current.find((item) => item.id === product.id);
-        targetProduct.quantity++;
-        return [...current];
-      });
-    } else if (operation === '-') {
-      setChosenProducts((current) => {
-        const targetProduct = current.find((item) => item.id === product.id);
-        if (targetProduct.quantity > 0) {
-          targetProduct.quantity--;
-        }
-        return [...current];
-      });
+  const modifyProduct = (updatedProduct, operation) => {
+    switch (operation) {
+      case '+':
+        setChosenProducts((current) => {
+          const targetProduct = current.find(
+            (item) => item.id === updatedProduct.id,
+          );
+          targetProduct.quantity++;
+          return [...current];
+        });
+        break;
+      case '-':
+        setChosenProducts((current) => {
+          const targetProduct = current.find(
+            (item) => item.id === updatedProduct.id,
+          );
+          if (targetProduct.quantity > 0) {
+            targetProduct.quantity--;
+          }
+          return [...current];
+        });
+        break;
+      case 'info':
+        setChosenProducts((current) => {
+          const targetProduct = current.find(
+            (item) => item.id === updatedProduct.id,
+          );
+          Object.assign(targetProduct, updatedProduct);
+          return [...current];
+        });
+        break;
     }
   };
 
-  const searchProduct = useCallback(async () => {
-    setIsSearching(true);
-    const response = await ApiClient.getIngredient(query);
-    setAvaliableIngredients(response);
-    setIsSearching(false);
-  }, [query]);
+  const submitLog = async () => {
+    setChosenProducts([]);
+    await ApiClient.submitLog(chosenProducts);
+    navigation.navigate('Home');
+  };
 
   const dive = (items) => {
     navigation.navigate('CategoryDetail', {
       items: items,
-      addProduct: addProduct,
-      removeProduct: removeProduct,
+      functions: {
+        addProduct,
+        removeProduct,
+        checkIfSelected,
+      },
     });
   };
 
@@ -76,12 +97,12 @@ const NewLog = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={[styles.androidSafeArea, styles.container]}>
-      <View style={styles.searchBar}>
+      <View style={searchBar.container}>
         <TextInput
           style={{ color: 'black' }}
           value={query}
           onChangeText={setQuery}
-          placeholder={'Search globally here or tap a category'}
+          placeholder={'Search product...'}
         />
       </View>
 
@@ -91,9 +112,10 @@ const NewLog = ({ navigation, route }) => {
 
       {query ? (
         <TouchableOpacity
-          style={styles.searchButton}
+          style={searchBar.searchButton}
           onPress={() => {
-            searchProduct();
+            setQuery('');
+            // searchProduct();
           }}
         >
           <Text> {isSearching ? <ActivityIndicator /> : 'Search'} </Text>
@@ -103,12 +125,15 @@ const NewLog = ({ navigation, route }) => {
           onPress={() => {
             navigation.navigate('MyItems', {
               products: chosenProducts,
-              modifyProduct: modifyProduct,
+              functions: {
+                modifyProduct,
+                submitLog,
+              },
             });
           }}
         >
-          <View style={products.container}>
-            <Text> See My Items</Text>
+          <View style={itemsButton.container}>
+            <Text style={itemsButton.text}> See My Items</Text>
           </View>
         </TouchableOpacity>
       )}
@@ -118,12 +143,12 @@ const NewLog = ({ navigation, route }) => {
 
 const Categories = ({ dive }) => {
   return (
-    <View style={styles.categoryContainer}>
+    <View style={categoriesPool.container}>
       <FlatList
         columnWrapperStyle={{ flexWrap: 'wrap' }}
         numColumns={2}
         data={db.categories}
-        keyExtractor={(item) => item.name}
+        keyExtractor={(category) => category.name}
         renderItem={({ item }) => {
           return <Category dive={dive} category={item} />;
         }}
@@ -132,14 +157,60 @@ const Categories = ({ dive }) => {
   );
 };
 
-const products = StyleSheet.create({
+const searchBar = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10,
+    height: 50,
+    width: 200,
+    marginTop: 5,
+    borderRadius: 5,
+    backgroundColor: '#f7d6bf',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '80%',
-    backgroundColor: 'teal',
+  },
+  results: {
+    height: 'auto',
+  },
+  searchButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'flex-end',
+    height: 60,
+    width: 250,
+    borderRadius: 5,
+    backgroundColor: '#0050AA',
+  },
+});
+
+const categoriesPool = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 10,
+  },
+  box: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'green',
+  },
+  wrapper: {
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+});
+
+const itemsButton = StyleSheet.create({
+  container: {
+    height: 50,
+    width: 200,
+    borderRadius: 5,
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#eebb4d',
+    marginBottom: 5,
+  },
+  text: {
+    fontSize: 25,
+    color: 'white',
   },
 });
 
@@ -153,41 +224,6 @@ const styles = StyleSheet.create({
   },
   androidSafeArea: {
     paddingTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  searchBar: {
-    height: 30,
-    backgroundColor: '#B5D6CE',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  resultsContainer: {
-    height: 'auto',
-  },
-  searchButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'flex-end',
-    height: 60,
-    width: 200,
-    borderRadius: 5,
-    backgroundColor: '#0050AA',
-  },
-  text: {
-    fontSize: 25,
-    color: 'white',
-  },
-  categoryContainer: {
-    flex: 1,
-    marginTop: 10,
-  },
-  box: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'green',
-  },
-  wrapper: {
-    marginVertical: 10,
-    alignItems: 'center',
   },
 });
 
