@@ -1,29 +1,41 @@
-import React from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   View,
   FlatList,
   Text,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import ProductDetail from '../Components/ProductDetail';
 
 const MyItems = ({ route }) => {
   const items = route.params.products;
+  const handleSubmit = () => {};
+
   return (
     <View style={styles.container}>
-      <View style={flatList.container}>
+      <SafeAreaView style={flatList.container}>
         <FlatList
           data={items}
           keyExtractor={(data) => data.id}
           renderItem={({ item }) => {
-            console.log(item);
-            return <ProductDetail item={item} />;
+            return (
+              <ProductDetail
+                item={item}
+                modifyProduct={route.params.modifyProduct}
+              />
+            );
           }}
-          overScrollMode={'always'}
+          initialScrollIndex={0}
         />
-      </View>
-      <TouchableOpacity style={button.container}>
+      </SafeAreaView>
+      <TouchableOpacity
+        style={button.container}
+        onPress={() => {
+          handleSubmit;
+        }}
+      >
         <View>
           <Text>Submit log</Text>
         </View>
@@ -44,7 +56,7 @@ const styles = StyleSheet.create({
 
 const flatList = StyleSheet.create({
   container: {
-    flex: 4,
+    height: 500,
     width: '100%',
     backgroundColor: 'teal',
   },
@@ -52,11 +64,12 @@ const flatList = StyleSheet.create({
 
 const button = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     width: 300,
-    height: 100,
+    height: 75,
+    marginVertical: 15,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#ffd36b',
   },
 });

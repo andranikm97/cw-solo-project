@@ -22,6 +22,7 @@ const Product = ({ item, addProduct, removeProduct }) => {
       name: item.name,
       id: uuidv4(),
       image: item.image,
+      quantity: 1,
     });
     setLoading(false);
   }, []);

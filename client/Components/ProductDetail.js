@@ -9,15 +9,16 @@ import {
 } from 'react-native';
 import ApiClient from '../Services/ApiService';
 
-const ProductDetail = ({ item }) => {
+const ProductDetail = ({ item, modifyProduct }) => {
   item.name = item.name.slice(0, 1).toUpperCase() + item.name.slice(1);
+
   const [isLoading, setLoading] = useState(true);
   const [product, setProduct] = useState({ ...item });
+  const [chosenQuantity, setChosenQuantity] = useState(1);
 
   const fetchProductInfo = useCallback(async () => {
     const response = await ApiClient.getProduct(item.name);
     const nutrients = await response.info.nutrients;
-    console.log(nutrients);
     await setProduct((current) => {
       return {
         ...current,
@@ -25,25 +26,29 @@ const ProductDetail = ({ item }) => {
         protein: nutrients.PROCNT,
         fiber: nutrients.FIBTG,
         fat: nutrients.FAT,
-        quantity: 1,
       };
     });
     setLoading(false);
   }, []);
 
+  const handleClick = (operation) => {
+    modifyProduct(product, operation);
+  };
+
   useEffect(() => {
     fetchProductInfo();
-    console.log('Product:', product);
   }, []);
 
   return (
     <View style={card.container}>
       <View style={card.header}>
-        <Text>{product.name}</Text>
+        <Text style={card.headerText}>{product.name}</Text>
       </View>
       <View style={card.info}>
         <View style={top.container}>
-          <Image style={top.image} source={product.image} />
+          <View style={top.imageBox}>
+            <Image style={top.image} source={product.image} />
+          </View>
 
           <View style={top.details}>
             {isLoading ? (
@@ -61,13 +66,29 @@ const ProductDetail = ({ item }) => {
 
         <View style={bottom.container}>
           <View style={bottom.currentQuantity}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setChosenQuantity((current) => {
+                  let newQuantity = current > 0 ? current - 1 : 0;
+                  return newQuantity;
+                });
+                handleClick('-');
+              }}
+            >
               <View style={bottom.button}>
                 <Text>-</Text>
               </View>
             </TouchableOpacity>
-            <Text>{product.quantity}</Text>
-            <TouchableOpacity>
+            <Text style={bottom.quantityText}>{chosenQuantity}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setChosenQuantity((current) => {
+                  let newQuantity = current + 1;
+                  return newQuantity;
+                });
+                handleClick('+');
+              }}
+            >
               <View style={bottom.button}>
                 <Text>+</Text>
               </View>
@@ -92,13 +113,18 @@ const card = StyleSheet.create({
     backgroundColor: '#ebecf1',
   },
   header: {
-    height: 20,
-    width: 50,
+    height: 40,
+    width: 150,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
     backgroundColor: '#ebecf1',
+  },
+  headerText: {
+    color: 'black',
+    fontSize: 22,
   },
 });
 
@@ -108,9 +134,19 @@ const top = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  imageBox: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   image: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
+  },
+  details: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -125,16 +161,14 @@ const bottom = StyleSheet.create({
     borderBottomRightRadius: 5,
     backgroundColor: 'blue',
   },
-  // productName: {
-  //   flex: 1,
-  //   flexDirection: 'row',
-  //   justifyContent: 'center',
-  // },
   currentQuantity: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+  },
+  quantityText: {
+    color: 'white',
   },
   button: {
     justifyContent: 'center',

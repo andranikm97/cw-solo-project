@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,18 @@ import {
 } from 'react-native';
 
 const Home = ({ navigation }) => {
+  // const [chosenProducts, setChosenProducts] = useState([]);
+
   return (
     <SafeAreaView style={[styles.androidSafeArea, styles.container]}>
       <View style={styles.addNew}>
         <TouchableOpacity
           style={styles.addNewButton}
           onPress={() => {
-            navigation.navigate('NewLog', { date: 'today' });
+            navigation.navigate('NewLog', {
+              date: 'today',
+              chosenProducts: chosenProducts,
+            });
           }}
         >
           <Text style={styles.addNewText}> Create a new Entry + </Text>

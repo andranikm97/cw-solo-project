@@ -1,6 +1,4 @@
 const { modulo } = require('react-native-reanimated');
-// const { v4: uuidv4 } = require('uuid');
-// uuidv4();
 
 const db = {
   categories: [

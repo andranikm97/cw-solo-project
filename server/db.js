@@ -1,46 +1,17 @@
-const db = {
-  categories: [
-    {
-      name: "fruits",
-      id: 1,
-      items: [
-        { name: "banana", id: 1 },
-        { name: "apple", id: 2 },
-        { name: "orange", id: 3 },
-        { name: "peach", id: 4 },
-      ],
-    },
-    {
-      name: "meat",
-      id: 2,
-      items: [
-        { name: "chicken", id: 1 },
-        { name: "lamb", id: 2 },
-        { name: "pork", id: 3 },
-        { name: "beef", id: 4 },
-      ],
-    },
-    {
-      name: "vegetables",
-      id: 3,
-      items: [
-        { name: "cucumber", id: 1 },
-        { name: "tomato", id: 2 },
-        { name: "carrot", id: 3 },
-        { name: "cabbage", id: 4 },
-      ],
-    },
-    {
-      name: "dairy",
-      id: 4,
-      items: [
-        { name: "milk", id: 1 },
-        { name: "cheese", id: 2 },
-        { name: "yogurt", id: 3 },
-        { name: "cream", id: 4 },
-      ],
-    },
-  ],
-};
+const mongoose = require("mongoose");
+const DB_PORT = process.env.DB_PORT || 27017;
+const DB_NAME = process.env.DB_NAME || "logd-app";
 
-module.exports = db;
+mongoose.connect(
+  `mongodb://localhost:${DB_PORT}/${DB_NAME}`,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err) => {
+    if (err) {
+      console.log(`Unable to connect to mongoose with ${err}`); // eslint-disable-line no-console
+    } else {
+      console.log(`Database connected @ port ${DB_PORT}!`); // eslint-disable-line no-console
+    }
+  }
+);
+
+module.exports = mongoose;

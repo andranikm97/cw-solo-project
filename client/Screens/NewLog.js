@@ -37,6 +37,24 @@ const NewLog = ({ navigation, route }) => {
     });
   };
 
+  const modifyProduct = (product, operation) => {
+    if (operation === '+') {
+      setChosenProducts((current) => {
+        const targetProduct = current.find((item) => item.id === product.id);
+        targetProduct.quantity++;
+        return [...current];
+      });
+    } else if (operation === '-') {
+      setChosenProducts((current) => {
+        const targetProduct = current.find((item) => item.id === product.id);
+        if (targetProduct.quantity > 0) {
+          targetProduct.quantity--;
+        }
+        return [...current];
+      });
+    }
+  };
+
   const searchProduct = useCallback(async () => {
     setIsSearching(true);
     const response = await ApiClient.getIngredient(query);
@@ -85,6 +103,7 @@ const NewLog = ({ navigation, route }) => {
           onPress={() => {
             navigation.navigate('MyItems', {
               products: chosenProducts,
+              modifyProduct: modifyProduct,
             });
           }}
         >
