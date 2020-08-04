@@ -3,11 +3,15 @@ const Log = require("./../models/Log");
 const createLog = async (req, res) => {
   try {
     console.log("Info receieved", req.body);
-    res.send("Created a log");
-    const newLog = await Log.create({ products: req.body });
+    let now = Date.now();
+    const newLog = await Log.create({
+      products: req.body,
+      date: now,
+    });
     res.status(201);
     res.json(newLog);
   } catch (error) {
+    console.log(error);
     res.status(400).send({ error, message: "Could not create log" });
   }
 };

@@ -7,33 +7,58 @@ import {
   Platform,
   SafeAreaView,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import ApiClient from '../Services/ApiService';
 import Log from '../Components/Log';
 
 const Home = ({ navigation }) => {
   const [logs, setLogs] = useState([]);
+  const [fetchingLogs, setFetchingLogs] = useState(true);
 
   const fetchLogs = useCallback(async () => {
     const response = await ApiClient.getLogs();
     const data = await response.json();
-    setLogs(data);
+    await setLogs(
+      data.sort((a, b) => {
+        let dateA = new Date(a.date);
+        let dateB = new Date(b.date);
+
+        if (dateA < dateB) {
+          return 1;
+        } else if (dateA > dateB) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }),
+    );
+    setFetchingLogs(false);
   }, []);
 
   useEffect(() => {
     fetchLogs();
   }, []);
+  // fetchLogs();
 
   return (
     <SafeAreaView style={[styles.androidSafeArea, styles.container]}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Your Logs</Text>
+      </View>
       <View style={myLogs.container}>
-        <FlatList
-          data={logs}
-          keyExtractor={(data) => data._id}
-          renderItem={({ item }) => {
-            return <Log navigation={navigation} log={item} />;
-          }}
-        />
+        {fetchingLogs ? (
+          <ActivityIndicator />
+        ) : (
+          <FlatList
+            data={logs}
+            keyExtractor={(data) => data._id}
+            renderItem={({ item }) => {
+              return <Log navigation={navigation} log={item} />;
+            }}
+            showsHorizontalScrollIndicator={false}
+          />
+        )}
       </View>
       <View style={addNew.container}>
         <TouchableOpacity
@@ -59,6 +84,16 @@ const styles = StyleSheet.create({
   },
   androidSafeArea: {
     paddingTop: Platform.OS === 'android' ? 30 : 0,
+  },
+  header: {
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerText: {
+    color: 'black',
+    fontWeight: '600',
+    fontSize: 25,
   },
 });
 
@@ -89,6 +124,7 @@ const addNew = StyleSheet.create({
     color: 'white',
     fontFamily: 'sans-serif',
     fontSize: 25,
+    fontWeight: '600',
   },
 });
 

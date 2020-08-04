@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
+import Chart from '../Components/Chart';
 
 const LogDetail = ({ route }) => {
   const log = route.params.log;
@@ -47,25 +48,7 @@ const LogDetail = ({ route }) => {
         <View style={main.container}>
           <View style={info.container}>
             <View style={chart.container}>
-              <Text>Chart</Text>
-            </View>
-            <View style={details.container}>
-              <View style={details.row}>
-                <View style={details.section}>
-                  <Text>{totals.calories}</Text>
-                </View>
-                <View style={details.section}>
-                  <Text>{totals.protein}</Text>
-                </View>
-              </View>
-              <View style={details.row}>
-                <View style={details.section}>
-                  <Text>{totals.fiber}</Text>
-                </View>
-                <View style={details.section}>
-                  <Text>{totals.fat}</Text>
-                </View>
-              </View>
+              <Chart totals={totals} />
             </View>
           </View>
 
@@ -85,6 +68,7 @@ const LogDetail = ({ route }) => {
                       </View>
                     );
                   }}
+                  showsHorizontalScrollIndicator={false}
                 />
                 <TouchableOpacity
                   onPress={() => {
@@ -131,30 +115,11 @@ const main = StyleSheet.create({
 const info = StyleSheet.create({
   container: {
     flex: 6,
-    padding: 5,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'powderblue',
   },
 });
 const chart = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'teal',
-  },
-});
-const details = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 5,
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  section: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

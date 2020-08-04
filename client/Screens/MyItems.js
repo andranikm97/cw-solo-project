@@ -31,6 +31,7 @@ const MyItems = ({ route }) => {
             );
           }}
           initialScrollIndex={0}
+          showsHorizontalScrollIndicator={false}
         />
       </SafeAreaView>
       <TouchableOpacity style={button.container} onPress={handleSubmit}>
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
 
 const flatList = StyleSheet.create({
   container: {
-    height: 400,
+    height: 500,
     width: '100%',
   },
 });

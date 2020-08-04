@@ -36,7 +36,6 @@ const LogSchema = mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now(),
   },
 });
 

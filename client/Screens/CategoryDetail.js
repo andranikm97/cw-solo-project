@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import Product from '../Components/Product';
 
@@ -15,6 +15,7 @@ const CategoryDetail = ({ route }) => {
         renderItem={({ item }) => {
           return <Product functions={functions} item={item} />;
         }}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );
@@ -22,11 +23,10 @@ const CategoryDetail = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingTop: 10,
     backgroundColor: 'white',
     alignItems: 'center',
-    overflow: 'scroll',
+    height: 600,
   },
   item: {
     height: 75,

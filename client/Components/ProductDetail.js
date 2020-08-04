@@ -65,10 +65,12 @@ const ProductDetail = ({ item, modifyProduct }) => {
               <ActivityIndicator style={top.activity} />
             ) : (
               <View>
-                <Text>Calories: {product.calories}</Text>
-                <Text>Protein: {product.protein}</Text>
-                <Text>Fiber: {product.fiber}</Text>
-                <Text>Fat: {product.fat}</Text>
+                <Text style={top.detailsText}>{product.calories} calories</Text>
+                <Text style={top.detailsText}>
+                  {product.protein} g of protein
+                </Text>
+                <Text style={top.detailsText}>{product.fiber} g of fiber</Text>
+                <Text style={top.detailsText}>{product.fat} g of fat</Text>
               </View>
             )}
           </View>
@@ -157,6 +159,10 @@ const top = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  detailsText: {
+    color: '#eebb4d',
+    fontSize: 18,
   },
 });
 

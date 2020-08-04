@@ -13,10 +13,7 @@ import {
 } from 'react-native';
 import ApiClient from '../Services/ApiService';
 import Category from '../Components/Category';
-import CategoryDetail from '../Screens/CategoryDetail';
 import db from '../db';
-import { createStackNavigator } from '@react-navigation/stack';
-import ChosenProduct from '../Components/ChosenProduct';
 
 const NewLog = ({ navigation, route }) => {
   const [query, setQuery] = useState('');
@@ -91,17 +88,15 @@ const NewLog = ({ navigation, route }) => {
     });
   };
 
-  useEffect(() => {
-    console.log('Current products:', chosenProducts);
-  }, [chosenProducts]);
-
   return (
     <SafeAreaView style={[styles.androidSafeArea, styles.container]}>
       <View style={searchBar.container}>
         <TextInput
           style={{ color: 'black' }}
           value={query}
-          onChangeText={setQuery}
+          onChangeText={(text) => {
+            setQuery(text);
+          }}
           placeholder={'Search product...'}
         />
       </View>
@@ -199,14 +194,14 @@ const categoriesPool = StyleSheet.create({
 
 const itemsButton = StyleSheet.create({
   container: {
-    height: 50,
+    height: 100,
     width: 200,
     borderRadius: 5,
     padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#eebb4d',
-    marginBottom: 5,
+    marginBottom: 15,
   },
   text: {
     fontSize: 25,
