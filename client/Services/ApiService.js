@@ -1,18 +1,19 @@
-const API_BASE_URL =
-  'https://edamam-food-and-grocery-database.p.rapidapi.com/parser?ingr=';
-const API_HOST = 'edamam-food-and-grocery-database.p.rapidapi.com';
-const API_KEY = 'ee86234462mshd09eba22e99b503p16b745jsn6c260c844dc5';
+import envs from '../env';
+
+const apiUrl = envs.API_BASE_URL;
+const apiHost = envs.API_HOST;
+const apiKey = envs.API_KEY;
 const ApiClient = {};
 
-const DB_BASE_URL = 'http://localhost:5001';
+const dbUrl = envs.DB_BASE_URL;
 
 ApiClient.getProduct = function (product) {
   product = product.trim().replace(' ', '%20'); //replaces spaces for http request nomenclature
-  return fetch(API_BASE_URL + product, {
+  return fetch(apiUrl + product, {
     method: 'GET',
     headers: {
-      'x-rapidapi-host': API_HOST,
-      'x-rapidapi-key': API_KEY,
+      'x-rapidapi-host': apiHost,
+      'x-rapidapi-key': apiKey,
     },
   })
     .then((response) => response.json())
@@ -26,7 +27,7 @@ ApiClient.getProduct = function (product) {
 };
 
 ApiClient.submitLog = function (items) {
-  return fetch(DB_BASE_URL + '/logs', {
+  return fetch(dbUrl + '/logs', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,7 +37,7 @@ ApiClient.submitLog = function (items) {
 };
 
 ApiClient.getLogs = function (items) {
-  return fetch(DB_BASE_URL + '/logs', {
+  return fetch(dbUrl + '/logs', {
     method: 'GET',
   });
 };
