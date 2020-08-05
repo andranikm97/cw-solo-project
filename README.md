@@ -7,7 +7,7 @@ A simple nutrition tracking application with a joyful UI design. It allows the u
 As general setup, fork this repository and clone it to your local machine through `git clone <link of the repository goes here>`
 To start using this application, you will need to make sure that you have:
 
-1. [Expo CLI](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiZx5ujyYTrAhUQAxAIHXUBCHwQFjAAegQIARAB&url=https%3A%2F%2Fdocs.expo.io%2Fworkflow%2Fexpo-cli%2F&usg=AOvVaw3tUXMcupxXA_6qZNa5eelg) installed. Follow [this](https://reactnative.dev/docs/environment-setup) documentation on how to setup Expo CLI for react native.
+1. [Expo CLI](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiZx5ujyYTrAhUQAxAIHXUBCHwQFjAAegQIARAB&url=https%3A%2F%2Fdocs.expo.io%2Fworkflow%2Fexpo-cli%2F&usg=AOvVaw3tUXMcupxXA_6qZNa5eelg) installed. Follow [this](https://reactnative.dev/docs/environment-setup) documentation on how to setup Expo CLI for [React-Native](https://reactnative.dev/docs/getting-started).
 2. MongoDB installed and running as a background or **brew** process. Follow [this](https://docs.mongodb.com/manual/administration/install-community/) documentation to set up MongoDB on your platform
    After completing the steps above, follow the step below in order:
 
