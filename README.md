@@ -39,7 +39,7 @@ $ nodemon index.js
 
 At this point, the project client and server sides should be up an running. Once again, make sure that MongoDB is running in the background, as the server needs it to send data to the client.
 
-#### !Note:
+#### Note:
 
 This project contains environment variables that are not publically avaliable for the purposes of safety of valuable information. Therefore, if you have an account with [RapidAPI](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjqw_ezzoTrAhWwlosKHWdHBSoQFjAAegQIBRAC&url=https%3A%2F%2Frapidapi.com%2F&usg=AOvVaw2cMarFvw9IR8j6C5We1zzs), subscribe to the [Edamam API](https://rapidapi.com/edamam/api/recipe-search-and-diet) and substitute your API key/host/website information for the one that is declared in the `./client/Services/ApiService.js` file in the `API_*` variables.
 
